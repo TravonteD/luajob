@@ -3,6 +3,12 @@
 Luajob is a library that wraps |vim-loop| with a more |jobstart|-like interface,
 which simplifies using async jobs in lua.
 
+## Installation
+If using vim-plug:
+```
+Plug 'TravonteD/luajob'
+```
+
 ## Usage
 
 First you'll need to get load the library
