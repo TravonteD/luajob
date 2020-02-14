@@ -1,0 +1,130 @@
+*luajob* Library for running jobs similar to |jobstart|
+
+================================================================================
+Contents                                                           *luajob-help*
+
+    Introduction........................|luajob-introduction|
+    Usage...............................|luajob-usage|
+    Configuration.......................|luajob-configuration|
+
+================================================================================
+Introduction                                               *luajob-introduction*
+
+Luajob is a library that wraps |vim-loop| with a more |jobstart|-like interface,
+which simplifies using aync jobs in lua.
+
+================================================================================
+Usage                                                             *luajob-usage*
+
+First you need to get load the library
+
+local luajob = require('luajob')
+
+Create a new luajob
+
+local ls = luajob:new({cmd = 'ls'})
+
+Start the process
+
+ls:start()
+
+================================================================================
+Example                                                         *luajob-example*
+ 
+This example calls "git branch" and sets the current branch to g:git_branch
+
+lua << EOF
+local luajob = require('luajob')
+local git_branch = luajob:new({
+  cmd = 'git branch',
+  on_stdout = function(err, data)
+    if err then
+      print('error:', err)
+    elseif data then
+      lines = vim.fn.split(data, '\n')
+      for _, line in ipairs(lines) do
+        if line:find('*') then
+          vim.api.nvim_set_var('git_branch', (line:gsub('\n', '')))
+        end
+      end
+    end
+  end
+})
+git_branch:start()
+EOF
+
+================================================================================
+Options                                                         *luajob-options*
+
+Configuration for the luajob is done by passing a table as an argument to an 
+instance of LuaJob the options are similar to that of |jobstart|
+
+cmd : String
+  The command to be run in the luajob.
+  Example:
+  {
+    cmd = 'sleep 3'
+  }
+
+cwd : String (Optional)
+  The working directory for the command defaults .
+  Example:
+  {
+    cwd = '~'
+  }
+
+env : Table (Optional)
+  A table of environment variables to be set for the command.
+  Example:
+  {
+    env = { MYENV = 'env' }
+  }
+
+detach : Boolean (Optional)
+  If set the luajob will continue running after Neovim has exited.
+  Example:
+  {
+    detach = true
+  }
+
+on_stdout : Function (Optional)
+  The function to be executed when the command outputs to standard output. It 
+  will be passed two arguments. The first representing a libuv err on reading,
+  and the second representing the outputted data.
+  Example:
+  {
+    on_stdout = function(err, data)
+      if err then
+        print('error', err)
+      elseif data then
+        print('data', data)
+      end
+    end
+  }
+  
+on_stderr : Function (Optional)
+  The function to be executed when the command outputs to standard error. It 
+  will be passed two arguments. The first representing libuv err on reading, 
+  and the second representing the outputted data.
+  Example:
+  {
+    on_stdout = function(err, data)
+      if err then
+        print('error', err)
+      elseif data then
+        print('data', data)
+      end
+    end
+  }
+
+on_exit : Function (Optional)
+  The function to be executed when the command outputs to standard error. It 
+  will be passed two arguments. The first representing the exit code, and 
+  the second representing the signal. 
+  Example:
+  {
+    on_exit = function(code, signal)
+      print('job exited', code, signal)
+    end
+  }
+
