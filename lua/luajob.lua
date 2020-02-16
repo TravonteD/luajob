@@ -1,4 +1,5 @@
 local M = {}
+
 function M:new(o)
   o = o or {}
   for n,f in pairs(o) do
@@ -8,6 +9,7 @@ function M:new(o)
   self.__index = self
   return o
 end
+
 function M:shutdown(code, signal)
   if M.on_exit then
     M:on_exit(code, signal)
@@ -23,6 +25,7 @@ function M:shutdown(code, signal)
   M.stdout:close()
   M.handle:close()
 end
+
 function M:start()
   local options = {}
   local args  = vim.fn.split(M.cmd, ' ')
@@ -31,6 +34,7 @@ function M:start()
   M.stderr = vim.loop.new_pipe(false)
   command = table.remove(args, 1)
   options.args = args
+  options.stdio = { M.stdin, M.stdout, M.stderr }
   if M.cwd then
     options.cwd = M.cwd
   end
