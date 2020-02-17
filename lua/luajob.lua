@@ -10,6 +10,18 @@ function M:new(o)
   return o
 end
 
+function M:send(data)
+  M.stdin:write(data)
+  M.stdin:shutdown()
+end
+
+function M:close()
+  M.stdin:close()
+  M.stderr:close()
+  M.stdout:close()
+  M.handle:close()
+end
+
 function M:shutdown(code, signal)
   if M.on_exit then
     M:on_exit(code, signal)
@@ -20,10 +32,7 @@ function M:shutdown(code, signal)
   if M.on_stderr then
       M.stderr:read_stop()
   end
-  M.stdin:close()
-  M.stderr:close()
-  M.stdout:close()
-  M.handle:close()
+  M:close()
 end
 
 function M:options()
