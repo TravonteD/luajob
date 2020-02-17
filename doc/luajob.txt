@@ -5,7 +5,9 @@ Contents                                                           *luajob-help*
 
     Introduction........................|luajob-introduction|
     Usage...............................|luajob-usage|
-    Configuration.......................|luajob-configuration|
+    Example.............................|luajob-example|
+    Options.............................|luajob-options|
+    Commands............................|luajob-Methods|
 
 ================================================================================
 Introduction                                               *luajob-introduction*
@@ -61,6 +63,7 @@ instance of LuaJob the options are similar to that of |jobstart|
 
 cmd : String
   The command to be run in the luajob.
+
   Example:
   {
     cmd = 'sleep 3'
@@ -69,12 +72,14 @@ cmd : String
 cwd : String (Optional)
   The working directory for the command defaults .
   Example:
+
   {
     cwd = '~'
   }
 
 env : Table (Optional)
   A table of environment variables to be set for the command.
+
   Example:
   {
     env = { MYENV = 'env' }
@@ -82,6 +87,7 @@ env : Table (Optional)
 
 detach : Boolean (Optional)
   If set the luajob will continue running after Neovim has exited.
+
   Example:
   {
     detach = true
@@ -91,6 +97,7 @@ on_stdout : Function (Optional)
   The function to be executed when the command outputs to standard output. It 
   will be passed two arguments. The first representing a libuv err on reading,
   and the second representing the outputted data.
+
   Example:
   {
     on_stdout = function(err, data)
@@ -106,6 +113,7 @@ on_stderr : Function (Optional)
   The function to be executed when the command outputs to standard error. It 
   will be passed two arguments. The first representing libuv err on reading, 
   and the second representing the outputted data.
+
   Example:
   {
     on_stdout = function(err, data)
@@ -121,6 +129,7 @@ on_exit : Function (Optional)
   The function to be executed when the command outputs to standard error. It 
   will be passed two arguments. The first representing the exit code, and 
   the second representing the signal. 
+
   Example:
   {
     on_exit = function(code, signal)
@@ -128,3 +137,30 @@ on_exit : Function (Optional)
     end
   }
 
+================================================================================
+Methods                                                         *luajob-methods*
+
+stop()                                                           *luajob-stop()*
+  Exits the job closing the handle and all *vim-loop* pipes
+
+  Example:
+  lua << EOF
+    local luajob = require('luajob')
+    cat = luajob:new({cmd = 'cat'})
+    cat:start()
+    cat:stop()
+  EOF
+
+send({string})                                                   *luajob-send()*
+  Takes a string and writes it to the standard input of the job. If the job
+  continually waits for standard input, make sure to close the handle using 
+  stop() to prevent the pipe from hanging after Neovim exits.
+
+  Example:
+  lua << EOF
+    local luajob = require('luajob')
+    cat = luajob:new({cmd = 'cat'})
+    cat:start()
+    cat:send('Hello World!')
+    cat:stop()
+  EOF

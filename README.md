@@ -25,7 +25,7 @@ local ls = luajob:new({cmd = 'ls'})
 
 Finally start the process
 
-```
+```lua
 ls:start()
 ```
 
@@ -59,61 +59,65 @@ Configuration for the luajob is done by passing a table as an argument to an
 instance of LuaJob the options are similar to that of |jobstart|
 
 cmd : String
-  The command to be run in the luajob.
-  Example:
-  ```lua
-  {
-    cmd = 'sleep 3'
-  }
-  ```
+The command to be run in the luajob.
+
+Example:
+
+```lua
+{
+cmd = 'sleep 3'
+}
+```
 
 cwd : String (Optional)
-  The working directory for the command defaults .
-  Example:
-  ```lua
-  {
-    cwd = '~'
-  }
-  ```
+The working directory for the command defaults .
+
+Example:
+
+```lua
+{
+cwd = '~'
+}
+```
 
 env : Table (Optional)
-  A table of environment variables to be set for the command.
+A table of environment variables to be set for the command.
 
-  Example:
-  ```lua
-  {
-    env = { MYENV = 'env' }
-  }
-  ```
+Example:
+```lua
+{
+env = { MYENV = 'env' }
+}
+```
 
 detach : Boolean (Optional)
-  If set the luajob will continue running after Neovim has exited.
+If set the luajob will continue running after Neovim has exited.
 
-  Example:
-  ```lua
-  {
-    detach = true
-  }
+Example:
+```lua
+{
+detach = true
+}
 
-  ```
+```
 
 on_stdout : Function (Optional)
-  The function to be executed when the command outputs to standard output. It 
-  will be passed two arguments. The first representing a libuv err on reading,
-  and the second representing the outputted data.
+The function to be executed when the command outputs to standard output. It 
+will be passed two arguments. The first representing a libuv err on reading,
+and the second representing the outputted data.
 
-  Example:
-  ```lua
-  {
-    on_stdout = function(err, data)
-      if err then
-        print('error', err)
-      elseif data then
-        print('data', data)
-      end
-    end
-  }
-  ```
+Example:
+```lua
+{
+on_stdout = function(err, data)
+if err then
+print('error', err)
+elseif data then
+print('data', data)
+end
+end
+}
+```
   
 on_stderr : Function (Optional)
   The function to be executed when the command outputs to standard error. It 
@@ -145,5 +149,32 @@ on_exit : Function (Optional)
       print('job exited', code, signal)
     end
   }
+  ```
+
+## Methods
+
+stop() :
+  Exits the job
+
+  Example:
+  ```lua
+  local luajob = require('luajob')
+  cat = luajob:new({cmd = 'cat'})
+  cat:start()
+  cat:stop()
+  ```
+
+send(<String>) :
+  Takes a string and writes it to the standard input of the job. If the job
+  continually waits for standard input, make sure to close it after the last
+  write using stop().
+    
+  Example:
+  ```lua
+  local luajob = require('luajob')
+  cat = luajob:new({cmd = 'cat'})
+  cat:start()
+  cat:send('Hello World!')
+  cat:stop()
   ```
 
