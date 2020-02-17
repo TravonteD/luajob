@@ -15,7 +15,7 @@ function M:send(data)
   M.stdin:shutdown()
 end
 
-function M:close()
+function M:stop()
   M.stdin:close()
   M.stderr:close()
   M.stdout:close()
