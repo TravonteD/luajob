@@ -1,4 +1,4 @@
-local M = {
+local M = {}
 
 function M:new(o)
   o = o or {}
@@ -32,7 +32,7 @@ function M:shutdown(code, signal)
   if M.on_stderr then
       M.stderr:read_stop()
   end
-  M:close()
+  M:stop()
 end
 
 function M:options()
