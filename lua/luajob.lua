@@ -1,4 +1,4 @@
-local M = {}
+local M = {
 
 function M:new(o)
   o = o or {}
@@ -56,7 +56,7 @@ function M:options()
   end
 
   if M.env then
-    options.env = M.cwd
+    options.env = M.env
   end
 
   if M.detach then
