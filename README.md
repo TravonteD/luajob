@@ -138,7 +138,7 @@ on_stderr : Function (Optional)
   ```
 
 on_exit : Function (Optional)
-  The function to be executed when the command outputs to standard error. It 
+  The function to be executed when the command exits. It 
   will be passed two arguments. The first representing the exit code, and 
   the second representing the signal. 
 
