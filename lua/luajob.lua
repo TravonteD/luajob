@@ -10,19 +10,19 @@ function M:new(o)
   return o
 end
 
-function M:send(data)
+function M.send(data)
   M.stdin:write(data)
   M.stdin:shutdown()
 end
 
-function M:stop()
+function M.stop()
   M.stdin:close()
   M.stderr:close()
   M.stdout:close()
   M.handle:close()
 end
 
-function M:shutdown(code, signal)
+function M.shutdown(code, signal)
   if M.on_exit then
     M:on_exit(code, signal)
   end
@@ -35,7 +35,7 @@ function M:shutdown(code, signal)
   M:stop()
 end
 
-function M:options()
+function M.options()
   local options = {}
   local args  = vim.fn.split(M.cmd, ' ')
 
@@ -45,10 +45,10 @@ function M:options()
 
   options.command = table.remove(args, 1)
   options.args = args
-  options.stdio = { 
-    M.stdin, 
-    M.stdout, 
-    M.stderr 
+  options.stdio = {
+    M.stdin,
+    M.stdout,
+    M.stderr
   }
 
   if M.cwd then
@@ -66,10 +66,10 @@ function M:options()
   return options
 end
 
-function M:start()
-  options = M.options()
-  M.handle = vim.loop.spawn(options.command, 
-    options, 
+function M.start()
+  local options = M.options()
+  M.handle = vim.loop.spawn(options.command,
+    options,
     vim.schedule_wrap(M.shutdown))
   if M.on_stdout then
       M.stdout:read_start(vim.schedule_wrap(M.on_stdout))
