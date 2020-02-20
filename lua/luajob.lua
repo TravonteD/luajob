@@ -32,7 +32,7 @@ function M.shutdown(code, signal)
   if M.on_stderr then
       M.stderr:read_stop()
   end
-  M:stop()
+  M.stop()
 end
 
 function M.options()

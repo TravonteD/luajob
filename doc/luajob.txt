@@ -28,7 +28,7 @@ local ls = luajob:new({cmd = 'ls'})
 
 Start the process
 
-ls:start()
+ls.start()
 
 ================================================================================
 Example                                                         *luajob-example*
@@ -52,7 +52,7 @@ local git_branch = luajob:new({
     end
   end
 })
-git_branch:start()
+git_branch.start()
 EOF
 
 ================================================================================
@@ -147,8 +147,8 @@ stop()                                                           *luajob-stop()*
   lua << EOF
     local luajob = require('luajob')
     cat = luajob:new({cmd = 'cat'})
-    cat:start()
-    cat:stop()
+    cat.start()
+    cat.stop()
   EOF
 
 send({string})                                                   *luajob-send()*
@@ -160,7 +160,7 @@ send({string})                                                   *luajob-send()*
   lua << EOF
     local luajob = require('luajob')
     cat = luajob:new({cmd = 'cat'})
-    cat:start()
-    cat:send('Hello World!')
-    cat:stop()
+    cat.start()
+    cat.send('Hello World!')
+    cat.stop()
   EOF

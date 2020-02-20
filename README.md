@@ -26,7 +26,7 @@ local ls = luajob:new({cmd = 'ls'})
 Finally start the process
 
 ```lua
-ls:start()
+ls.start()
 ```
 
 ## Example
@@ -65,7 +65,7 @@ Example:
 
 ```lua
 {
-cmd = 'sleep 3'
+  cmd = 'sleep 3'
 }
 ```
 
@@ -76,7 +76,7 @@ Example:
 
 ```lua
 {
-cwd = '~'
+  cwd = '~'
 }
 ```
 
@@ -86,7 +86,7 @@ A table of environment variables to be set for the command.
 Example:
 ```lua
 {
-env = { MYENV = 'env' }
+  env = { MYENV = 'env' }
 }
 ```
 
@@ -96,7 +96,7 @@ If set the luajob will continue running after Neovim has exited.
 Example:
 ```lua
 {
-detach = true
+  detach = true
 }
 
 ```
@@ -109,72 +109,72 @@ and the second representing the outputted data.
 Example:
 ```lua
 {
-on_stdout = function(err, data)
-if err then
-print('error', err)
-elseif data then
-print('data', data)
-end
-end
+  on_stdout = function(err, data)
+    if err then
+      print('error', err)
+    elseif data then
+      print('data', data)
+    end
+  end
 }
 ```
   
 on_stderr : Function (Optional)
-  The function to be executed when the command outputs to standard error. It 
-  will be passed two arguments. The first representing libuv err on reading, 
-  and the second representing the outputted data.
+The function to be executed when the command outputs to standard error. It 
+will be passed two arguments. The first representing libuv err on reading, 
+and the second representing the outputted data.
 
-  Example:
-  ```lua
-  {
-    on_stdout = function(err, data)
-      if err then
-        print('error', err)
-      elseif data then
-        print('data', data)
-      end
+Example:
+```lua
+{
+  on_stdout = function(err, data)
+    if err then
+      print('error', err)
+    elseif data then
+      print('data', data)
     end
-  }
-  ```
+  end
+}
+```
 
 on_exit : Function (Optional)
-  The function to be executed when the command exits. It 
-  will be passed two arguments. The first representing the exit code, and 
-  the second representing the signal. 
+The function to be executed when the command exits. It 
+will be passed two arguments. The first representing the exit code, and 
+the second representing the signal. 
 
-  Example:
-  ```lua
-  {
-    on_exit = function(code, signal)
-      print('job exited', code, signal)
-    end
-  }
-  ```
+Example:
+```lua
+{
+  on_exit = function(code, signal)
+    print('job exited', code, signal)
+  end
+}
+```
 
 ## Methods
 
 stop() :
-  Exits the job
+Exits the job
 
-  Example:
-  ```lua
-  local luajob = require('luajob')
-  cat = luajob:new({cmd = 'cat'})
-  cat:start()
-  cat:stop()
-  ```
+Example:
+```lua
+local luajob = require('luajob')
+cat = luajob:new({cmd = 'cat'})
+cat.start()
+cat.stop()
+```
 
 send(<String>) :
-  Takes a string and writes it to the standard input of the job. If the job
-  continually waits for standard input, make sure to close it after the last
-  write using stop().
-    
-  Example:
-  ```lua
-  local luajob = require('luajob')
-  cat = luajob:new({cmd = 'cat'})
-  cat:start()
-  cat:send('Hello World!')
-  cat:stop()
-  ```
+Takes a string and writes it to the standard input of the job. If the job
+continually waits for standard input, make sure to close it after the last
+write using stop().
+  
+Example:
+```lua
+local luajob = require('luajob')
+cat = luajob:new({cmd = 'cat'})
+cat.start()
+cat.send('Hello World!')
+cat.stop()
+```
 
