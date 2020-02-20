@@ -1,0 +1,19 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Source
+      uses: actions/checkout@v2
+    - name: Setup Luacheck
+      run: |
+        sudo apt-get update &&
+        sudo apt-get install -y lua5.1 luarocks &&
+        sudo luarocks install luacheck
+    - name: Run Linter
+      run: luacheck .
