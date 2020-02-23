@@ -24,7 +24,7 @@ end
 
 function M.shutdown(code, signal)
   if M.on_exit then
-    M:on_exit(code, signal)
+    M.on_exit(code, signal)
   end
   if M.on_stdout then
       M.stdout:read_stop()
