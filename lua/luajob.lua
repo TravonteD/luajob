@@ -1,5 +1,11 @@
 local M = {}
 
+local function close_safely(handle)
+  if not handle:is_closing() then
+      handle:close()
+  end
+end
+
 function M:new(o)
   o = o or {}
   for n,f in pairs(o) do
@@ -16,10 +22,10 @@ function M.send(data)
 end
 
 function M.stop()
-  M.stdin:close()
-  M.stderr:close()
-  M.stdout:close()
-  M.handle:close()
+  close_safely(M.stdin)
+  close_safely(M.stderr)
+  close_safely(M.stdout)
+  close_safely(M.handle)
 end
 
 function M.shutdown(code, signal)
