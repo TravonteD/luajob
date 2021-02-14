@@ -6,6 +6,12 @@ local function close_safely(handle)
   end
 end
 
+local function wrap_ctx(ctx, callback)
+  return function(err, data)
+    callback(ctx, err, data)
+  end
+end
+
 function M:new(o)
   o = o or {}
   for n,f in pairs(o) do
@@ -72,16 +78,16 @@ function M.options()
   return options
 end
 
-function M.start()
+function M.start(self)
   local options = M.options()
   M.handle = vim.loop.spawn(options.command,
     options,
-    vim.schedule_wrap(M.shutdown))
+    vim.schedule_wrap(wrap_ctx(self, M.shutdown)))
   if M.on_stdout then
-      M.stdout:read_start(vim.schedule_wrap(M.on_stdout))
+      M.stdout:read_start(vim.schedule_wrap(wrap_ctx(self, M.on_stdout)))
   end
   if M.on_stderr then
-      M.stderr:read_start(vim.schedule_wrap(M.on_stderr))
+      M.stderr:read_start(vim.schedule_wrap(wrap_ctx(self, M.on_stderr)))
   end
 end
 return M
